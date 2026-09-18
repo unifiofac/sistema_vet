@@ -1,0 +1,31 @@
+<div class="card">
+  <div class="header">
+    <h2>Login</h2>
+  </div>
+  <div class="content">
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" class="input-full" [(ngModel)]="email"
+             [class.erro-input]="tipoMensagem === 'erro' && !email"
+             placeholder="seu@email.com">
+    </div>
+
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" class="input-full" [(ngModel)]="senha"
+             [class.erro-input]="tipoMensagem === 'erro' && !senha"
+             placeholder="Digite sua senha"
+             (keyup.enter)="realizarLogin()">
+    </div>
+
+    <a href="#" class="link" (click)="esqueceuSenha(); $event.preventDefault()">Esqueci minha senha</a>
+
+    <div class="mensagem" [class.erro]="tipoMensagem === 'erro'"
+         [class.sucesso]="tipoMensagem === 'sucesso'"
+         [style.display]="mensagem ? 'block' : 'none'">
+      {{ mensagem }}
+    </div>
+
+    <button class="btn" (click)="realizarLogin()">Login</button>
+  </div>
+</div>

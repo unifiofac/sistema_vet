@@ -1,0 +1,87 @@
+<div class="container">
+  <div class="view-buttons">
+    <a class="view-btn" routerLink="/pets/cadastro">Novo Cadastro</a>
+    <button class="view-btn active">Ver Pacientes ({{ pets.length }})</button>
+  </div>
+
+  <div class="main-grid">
+    <div class="pet-card">
+      <h2 class="card-title">Pacientes</h2>
+      <div *ngFor="let pet of pets"
+           class="pet-list-item"
+           [class.active]="petSelecionado?.id === pet.id"
+           (click)="selecionar(pet.id)">
+        <div class="pet-name">{{ pet.nome }}</div>
+        <div class="pet-species">{{ pet.especie }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="petSelecionado; else vazio">
+      <div class="pet-card panel-grid">
+        <h1 style="font-size: 2rem; font-weight: bold;">Painel do pet</h1>
+
+        <div class="pet-header">
+          <div>
+            <div class="pet-photo">
+              <img *ngIf="petSelecionado.foto" [src]="petSelecionado.foto" [alt]="petSelecionado.nome">
+              <i *ngIf="!petSelecionado.foto" class="fas fa-camera"></i>
+            </div>
+            <div class="pet-info">
+              <h2>{{ petSelecionado.nome }}</h2>
+              <p>{{ petSelecionado.especie }}</p>
+              <p>Idade: {{ petSelecionado.idade }}</p>
+              <p>Sexo: {{ petSelecionado.sexo }}</p>
+            </div>
+          </div>
+          <div>
+            <h3 class="section-title">Status</h3>
+            <div class="status-badge">
+              <div class="status-dot"></div>
+              <span>{{ petSelecionado.status }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tutor-info">
+          <h3 class="section-title">Informações do Tutor</h3>
+          <p style="color: #374151;">{{ petSelecionado.tutorNome }}</p>
+          <p style="color: #6b7280;">{{ petSelecionado.tutorContato }}</p>
+        </div>
+
+        <div *ngIf="petSelecionado.historicoMedico">
+          <h3 class="section-title">Histórico Médico Inicial</h3>
+          <p style="color: #6b7280;">{{ petSelecionado.historicoMedico }}</p>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn-action btn-blue" (click)="adicionarConsulta()">
+            <i class="fas fa-calendar"></i> Adicionar Consulta
+          </button>
+          <button class="btn-action btn-purple" (click)="adicionarVacinacao()">
+            <i class="fas fa-syringe"></i> Adicionar Vacinação
+          </button>
+        </div>
+      </div>
+
+      <div class="pet-card">
+        <h3 class="section-title">Histórico</h3>
+        <div *ngFor="let item of petSelecionado.historico" class="history-item">
+          <div class="history-dot"></div>
+          <div class="history-content">
+            <h4>{{ item.tipo }}</h4>
+            <p>{{ item.data }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #vazio>
+      <div class="pet-card">
+        <div class="empty-state">
+          <i class="fas fa-camera"></i>
+          <p>Selecione um paciente para ver os detalhes</p>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

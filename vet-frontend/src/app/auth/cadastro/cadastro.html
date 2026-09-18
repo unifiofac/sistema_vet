@@ -1,0 +1,42 @@
+<div class="card">
+  <div class="header">
+    <h2>Cadastrar</h2>
+  </div>
+  <div class="content">
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" class="input-full" [(ngModel)]="email" placeholder="seu@email.com">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group-small">
+        <label>DDD</label>
+        <input type="text" class="input-small" [(ngModel)]="ddd" maxlength="2" placeholder="14">
+      </div>
+      <div class="form-group-large">
+        <label>Número de Celular</label>
+        <input type="text" class="input-large" [(ngModel)]="celular" maxlength="9" placeholder="123456789">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" class="input-full" [(ngModel)]="senha" placeholder="Mínimo 6 caracteres">
+    </div>
+
+    <div class="form-group">
+      <label>Confirmar Senha</label>
+      <input type="password" class="input-full" [(ngModel)]="confirmarSenha"
+             placeholder="Digite a senha novamente"
+             (keyup.enter)="realizarCadastro()">
+    </div>
+
+    <div class="mensagem" [class.erro]="tipoMensagem === 'erro'"
+         [class.sucesso]="tipoMensagem === 'sucesso'"
+         [style.display]="mensagem ? 'block' : 'none'">
+      {{ mensagem }}
+    </div>
+
+    <button class="btn" (click)="realizarCadastro()">Cadastrar</button>
+  </div>
+</div>

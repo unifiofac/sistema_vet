@@ -1,0 +1,520 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    padding: 40px 20px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.card {
+    background-color: #d3d3d3;
+    border-radius: 15px;
+    overflow: hidden;
+    flex: 1;
+    min-width: 450px;
+}
+
+.header {
+    background-color: #14b8a6;
+    padding: 25px;
+    text-align: center;
+}
+
+.header h2 {
+    color: #f3eeee;
+    font-size: 30px;
+    font-weight: normal;
+}
+
+.content {
+    padding: 30px 40px 40px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.form-group-small {
+    flex: 0 0 90px;
+}
+
+.form-group-large {
+    flex: 1;
+}
+
+label {
+    display: block;
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+input {
+    border: 2px solid #080303;
+    background-color: white;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.input-full {
+    width: 100%;
+}
+
+.input-small {
+    width: 100%;
+}
+
+.input-large {
+    width: 100%;
+}
+
+.btn {
+    background-color: #14b8a6;
+    border: none;
+    padding: 15px 50px;
+    font-size: 20px;
+    color: #040000;
+    border-radius: 8px;
+    cursor: pointer;
+    display: block;
+    margin: 30px auto 0;
+}
+
+.btn:hover {
+    background-color: #14b8a6;
+}
+
+.link {
+    color: #4169E1;
+    text-decoration: underline;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.link:hover {
+    color: #2a4fb8;
+}
+
+
+/* parte dos pets */
+
+header {
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1rem 0;
+}
+
+.header-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    background-color: #14b8a6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+nav {
+    display: flex;
+    gap: 1.5rem;
+}
+
+nav button {
+    background: none;
+    border: none;
+    color: #4b5563;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: color 0.3s;
+}
+
+nav button:hover {
+    color: #14b8a6;
+}
+
+.user-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #ccfbf1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #14b8a6;
+    cursor: pointer;
+}
+
+.view-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.view-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    color: #374151;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.view-btn.active {
+    background-color: #14b8a6;
+    color: white;
+    border-color: #14b8a6;
+}
+
+.main-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+    .main-grid {
+        grid-template-columns: 350px 1fr;
+    }
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #14b8a6;
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.upload-area {
+    border: 2px dashed #d1d5db;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.upload-area:hover {
+    border-color: #14b8a6;
+    background-color: #f0fdfa;
+}
+
+.upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 0.875rem;
+    background-color: #14b8a6;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0d9488;
+}
+
+.pet-list-item {
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.pet-list-item:hover {
+    background-color: #f3f4f6;
+}
+
+.pet-list-item.active {
+    background-color: #ccfbf1;
+    border: 2px solid #14b8a6;
+}
+
+.pet-name {
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.pet-species {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+.panel-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.pet-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.pet-photo {
+    width: 100%;
+    height: 200px;
+    background-color: #f3f4f6;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.pet-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pet-photo i {
+    font-size: 3rem;
+    color: #d1d5db;
+}
+
+.pet-info h2 {
+    font-size: 1.875rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.pet-info p {
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #10b981;
+    border-radius: 50%;
+}
+
+.section-title {
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.tutor-info {
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 1.5rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    padding: 0.625rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.btn-blue {
+    background-color: #3b82f6;
+}
+
+.btn-blue:hover {
+    background-color: #2563eb;
+}
+
+.btn-purple {
+    background-color: #a855f7;
+}
+
+.btn-purple:hover {
+    background-color: #9333ea;
+}
+
+.notification {
+    background-color: #ccfbf1;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #14b8a6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.notification-content h4 {
+    font-weight: 500;
+    color: #134e4a;
+    margin-bottom: 0.25rem;
+}
+
+.notification-content p {
+    font-size: 0.875rem;
+    color: #115e59;
+}
+
+.history-item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.history-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #14b8a6;
+    border-radius: 50%;
+    margin-top: 0.5rem;
+    flex-shrink: 0;
+}
+
+.history-content h4 {
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.history-content p {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.chat-input {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 0.75rem;
+}
+
+.chat-input input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #9ca3af;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.pet-card {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
