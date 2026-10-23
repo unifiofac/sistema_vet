@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="login-box">
+        <div class="logo">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M40 10C23.43 10 10 23.43 10 40C10 56.57 23.43 70 40 70C56.57 70 70 56.57 70 40C70 23.43 56.57 10 40 10ZM40 25C42.76 25 45 27.24 45 30C45 32.76 42.76 35 40 35C37.24 35 35 32.76 35 30C35 27.24 37.24 25 40 25ZM50 55H30V52C30 48.13 37.13 46 40 46C42.87 46 50 48.13 50 52V55Z" fill="#4CAF50"/>
+                <path d="M25 22C27.21 22 29 23.79 29 26C29 28.21 27.21 30 25 30C22.79 30 21 28.21 21 26C21 23.79 22.79 22 25 22Z" fill="#4CAF50"/>
+                <path d="M55 22C57.21 22 59 23.79 59 26C59 28.21 57.21 30 55 30C52.79 30 51 28.21 51 26C51 23.79 52.79 22 55 22Z" fill="#4CAF50"/>
+            </svg>
+        </div>
+        <h1>Sistema Veterinário</h1>
+        <p class="subtitle">Faça login para acessar o sistema</p>
+
+        <form [formGroup]="form" (ngSubmit)="entrar()">
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" formControlName="email">
+                @if (form.controls.email.touched && form.controls.email.invalid) {
+                    <small class="erro-campo">Informe um e-mail válido.</small>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" formControlName="senha">
+                @if (form.controls.senha.touched && form.controls.senha.invalid) {
+                    <small class="erro-campo">Informe a senha.</small>
+                }
+            </div>
+
+            @if (erro) {
+                <p class="erro-login">{{ erro }}</p>
+            }
+
+            <button type="submit" class="btn-login">Entrar</button>
+        </form>
+
+        <div class="info-box">
+            <p><strong>Credenciais de teste:</strong></p>
+            <p>Veterinário: carlos@vetclinic.com</p>
+            <p>Cliente: maria@email.com</p>
+            <p>Senha: senha123</p>
+        </div>
+    </div>
+</div>

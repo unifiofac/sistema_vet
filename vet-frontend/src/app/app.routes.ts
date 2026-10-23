@@ -1,14 +1,23 @@
 import { Routes } from '@angular/router';
-import { Login } from './auth/login/login';
-import { Cadastro } from './auth/cadastro/cadastro';
-import { CadastroPet } from './pets/cadastro-pet/cadastro-pet';
-import { PainelPet } from './pets/painel-pet/painel-pet';
+import { clienteGuard, veterinarioGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: 'login', component: Login },
-  { path: 'cadastro', component: Cadastro },
-  { path: 'pets/cadastro', component: CadastroPet },
-  { path: 'pets/painel', component: PainelPet },
-  { path: 'pets', redirectTo: 'pets/painel', pathMatch: 'full' },
-  { path: '', redirectTo: 'login', pathMatch: 'full' }
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', loadComponent: () => import('./pages/login/login').then(m => m.Login) },
+  {
+    path: 'veterinario',
+    canActivate: [veterinarioGuard],
+    loadComponent: () => import('./pages/painel-veterinario/painel-veterinario').then(m => m.PainelVeterinario),
+  },
+  {
+    path: 'veterinario/pacientes/novo',
+    canActivate: [veterinarioGuard],
+    loadComponent: () => import('./pages/cadastro-paciente/cadastro-paciente').then(m => m.CadastroPaciente),
+  },
+  {
+    path: 'cliente',
+    canActivate: [clienteGuard],
+    loadComponent: () => import('./pages/painel-cliente/painel-cliente').then(m => m.PainelCliente),
+  },
+  { path: '**', redirectTo: 'login' },
 ];
