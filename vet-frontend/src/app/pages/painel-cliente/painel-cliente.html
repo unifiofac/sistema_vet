@@ -1,1 +1,74 @@
-<p>painel-cliente works!</p>
+<nav class="navbar">
+    <div class="nav-container">
+        <h2>🐾 Sistema Veterinário</h2>
+        <div class="user-info">
+            <span>Olá, {{ auth.usuario()?.nome }}</span>
+            <a href="#" class="btn-logout" (click)="$event.preventDefault(); auth.logout()">Sair</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <header class="page-header">
+        <h1>Meus Pets</h1>
+        <p>Visualize as informações dos seus animais de estimação</p>
+    </header>
+
+    <div class="pets-grid">
+        @for (pet of pacientes(); track pet.id) {
+            <div class="pet-card">
+                <div class="pet-icon">{{ icone(pet.especie) }}</div>
+                <h3>{{ pet.nome }}</h3>
+
+                <div class="pet-info">
+                    <div class="info-item">
+                        <span class="label">Espécie:</span>
+                        <span class="value">{{ pet.especie }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Raça:</span>
+                        <span class="value">{{ pet.raca }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Idade:</span>
+                        <span class="value">{{ pet.idade }} anos</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Peso:</span>
+                        <span class="value">{{ pet.peso }} kg</span>
+                    </div>
+                </div>
+
+                @if (pet.historicoMedico) {
+                    <div class="pet-section">
+                        <h4>Histórico Médico</h4>
+                        <p>{{ pet.historicoMedico }}</p>
+                    </div>
+                }
+
+                @if (pet.alergias) {
+                    <div class="pet-section alert-section">
+                        <h4>⚠️ Alergias</h4>
+                        <p>{{ pet.alergias }}</p>
+                    </div>
+                }
+
+                @if (pet.medicamentosAtuais) {
+                    <div class="pet-section">
+                        <h4>💊 Medicamentos Atuais</h4>
+                        <p>{{ pet.medicamentosAtuais }}</p>
+                    </div>
+                }
+
+                <div class="pet-footer">
+                    <small>Cadastrado em: {{ pet.dataCadastro | date: 'dd/MM/yyyy' }}</small>
+                </div>
+            </div>
+        } @empty {
+            <div class="no-pets">
+                <p>Você ainda não tem pets cadastrados.</p>
+                <p>Entre em contato com a clínica veterinária para cadastrar seus pets.</p>
+            </div>
+        }
+    </div>
+</div>
