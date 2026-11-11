@@ -1,5 +1,107 @@
-@for (m of mensagens(); track $index) {
-  <div class="message-content"
-       [class.texto-puro]="m.puro"
-       [innerHTML]="m.html"></div>
-}
+<nav class="navbar">
+    <div class="nav-container">
+        <h2>🐾 Sistema Veterinário</h2>
+        <div class="user-info">
+            <span>Dr(a). {{ auth.usuario()?.nome }}</span>
+            <a routerLink="/veterinario/pacientes/novo" class="btn-new">+ Novo Paciente</a>
+            <a href="#" class="btn-logout" (click)="$event.preventDefault(); auth.logout()">Sair</a>
+        </div>
+    </div>
+</nav>
+
+<div class="main-container">
+    <div class="patients-section">
+        <header class="section-header">
+            <h1>Pacientes Cadastrados</h1>
+            <p>Clique em um paciente para ver detalhes ou interagir com a IA</p>
+        </header>
+
+        <div class="patients-list">
+            @for (pet of pacientes(); track pet.id) {
+                <div class="patient-card"
+                     [class.selected]="selecionado()?.id === pet.id"
+                     (click)="selecionar(pet)">
+                    <div class="patient-icon">{{ icone(pet.especie) }}</div>
+                    <div class="patient-info">
+                        <h3>{{ pet.nome }}</h3>
+                        <p class="patient-species">{{ pet.especie }} - {{ pet.raca }}</p>
+                        <p class="patient-owner">Dono: {{ pet.nomeDono }}</p>
+                        <div class="patient-stats">
+                            <span>🎂 {{ pet.idade }} anos</span>
+                            <span>⚖️ {{ pet.peso }} kg</span>
+                        </div>
+                    </div>
+                </div>
+            } @empty {
+                <div class="no-patients">
+                    <p>Nenhum paciente cadastrado ainda.</p>
+                    <a routerLink="/veterinario/pacientes/novo" class="btn-primary">Cadastrar Primeiro Paciente</a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="chat-section">
+        <div class="chat-header">
+            <h2>🤖 Assistente IA Veterinária</h2>
+            <p>
+                @if (selecionado(); as pet) {
+                    Conversando sobre: {{ pet.nome }} ({{ pet.especie }})
+                } @else {
+                    Selecione um paciente para começar
+                }
+            </p>
+        </div>
+
+        <div class="chat-messages" #chat>
+            @if (!selecionado()) {
+                <div class="welcome-message">
+                    <div class="ai-avatar">🤖</div>
+                    <div class="message-content">
+                        <p><strong>Olá! Sou seu assistente veterinário com IA.</strong></p>
+                        <p>Posso ajudar você com:</p>
+                        <ul>
+                            <li>Análise de sintomas e possíveis diagnósticos</li>
+                            <li>Sugestões de tratamentos e medicações</li>
+                            <li>Orientações sobre cuidados específicos</li>
+                            <li>Informações sobre vacinas e prevenção</li>
+                            <li>Dicas nutricionais e comportamentais</li>
+                        </ul>
+                        <p>Selecione um paciente na lista à esquerda para começar!</p>
+                    </div>
+                </div>
+            }
+
+            @for (m of mensagens(); track $index) {
+                <div class="message" [class.user]="m.tipo === 'user'">
+                    <div [class]="m.tipo === 'ai' ? 'ai-avatar' : 'user-avatar'">
+                        {{ m.tipo === 'ai' ? '🤖' : '👨‍⚕️' }}
+                    </div>
+                    <div class="message-content" [class.texto-puro]="m.puro" [innerHTML]="m.html"></div>
+                </div>
+            }
+
+            @if (digitando()) {
+                <div class="message">
+                    <div class="ai-avatar">🤖</div>
+                    <div class="message-content"><em>Analisando informações...</em></div>
+                </div>
+            }
+        </div>
+
+        <div class="chat-input-container">
+            <textarea id="chatInput"
+                      placeholder="Digite sua pergunta sobre o paciente..."
+                      [(ngModel)]="texto"
+                      [disabled]="!selecionado() || digitando()"
+                      (keydown.enter)="teclaEnter($event)"></textarea>
+            <button id="sendButton"
+                    [disabled]="!selecionado() || digitando()"
+                    (click)="enviar()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
