@@ -1,5 +1,5 @@
 package br.edu.vet.vetbackend.entidades;
 
-public class veterinario {
+public class Veterinario {
 
 }
