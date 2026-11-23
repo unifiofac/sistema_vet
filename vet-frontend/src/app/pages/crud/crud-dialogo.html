@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>{{ edicao ? 'Editar' : 'Novo(a)' }} {{ entidade.singular }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="salvar()">
+  <mat-dialog-content>
+    <div class="grade">
+      @for (campo of entidade.campos; track campo.chave) {
+        <mat-form-field appearance="outline" [class.inteira]="campo.largura === 'inteira'">
+          <mat-label>{{ campo.rotulo }}</mat-label>
+
+          @switch (campo.tipo) {
+            @case ('select') {
+              <mat-select [formControlName]="campo.chave">
+                @if (!campo.obrigatorio) {
+                  <mat-option [value]="null">—</mat-option>
+                }
+                @for (o of campo.opcoes ?? opcoes()[campo.chave] ?? []; track o.valor) {
+                  <mat-option [value]="o.valor">{{ o.rotulo }}</mat-option>
+                }
+              </mat-select>
+            }
+            @case ('textarea') {
+              <textarea matInput rows="3" [formControlName]="campo.chave"></textarea>
+            }
+            @case ('datetime') {
+              <input matInput type="datetime-local" [formControlName]="campo.chave" />
+            }
+            @case ('number') {
+              <input matInput type="number" min="0" [step]="campo.passo ?? '1'" [formControlName]="campo.chave" />
+            }
+            @case ('password') {
+              <input matInput type="password" autocomplete="new-password" [formControlName]="campo.chave" />
+              @if (edicao) {
+                <mat-hint>Deixe em branco para manter a atual</mat-hint>
+              }
+            }
+            @default {
+              <input matInput [type]="campo.tipo" [formControlName]="campo.chave" />
+            }
+          }
+
+          <mat-error>{{ mensagemErro(campo) }}</mat-error>
+        </mat-form-field>
+      }
+    </div>
+
+    @if (erro()) {
+      <p class="erro">{{ erro() }}</p>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button type="submit" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : 'Salvar' }}
+    </button>
+  </mat-dialog-actions>
+</form>

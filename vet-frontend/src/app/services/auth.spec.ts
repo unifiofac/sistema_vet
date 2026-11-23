@@ -5,7 +5,6 @@ import { provideRouter } from '@angular/router';
 import { AuthService } from './auth';
 import { authInterceptor } from './auth.interceptor';
 
-// monta um JWT de mentira só com o payload (o frontend não valida assinatura)
 function jwt(expEmSegundos: number): string {
   const payload = btoa(JSON.stringify({ sub: '1', exp: expEmSegundos }));
   return `x.${payload}.y`;

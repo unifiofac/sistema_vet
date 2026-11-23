@@ -1,6 +1,5 @@
 package br.edu.vet.vetbackend.seguranca;
 
-import br.edu.vet.vetbackend.entidades.Usuario;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,13 +21,13 @@ public class JwtService {
         this.horas = horas;
     }
 
-    public String gerar(Usuario usuario) {
+    public String gerar(Long id, String tipo) {
         Instant agora = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .subject(String.valueOf(usuario.getId()))
+                .subject(String.valueOf(id))
                 .issuedAt(agora)
                 .expiresAt(agora.plus(horas, ChronoUnit.HOURS))
-                .claim("tipo", usuario.getTipo().name())
+                .claim("tipo", tipo.toUpperCase())
                 .build();
         JwsHeader cabecalho = JwsHeader.with(MacAlgorithm.HS256).build();
         return encoder.encode(JwtEncoderParameters.from(cabecalho, claims)).getTokenValue();

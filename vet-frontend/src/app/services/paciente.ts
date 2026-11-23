@@ -11,12 +11,10 @@ export class PacienteService {
   private http = inject(HttpClient);
   private base = `${environment.apiUrl}/api/pacientes`;
 
-  // veterinário: todos os pacientes
   listarTodos(): Observable<Paciente[]> {
     return this.http.get<Paciente[]>(this.base);
   }
 
-  // cliente: só os próprios pets (o servidor decide pelo token, não por um id enviado)
   listarMeus(): Observable<Paciente[]> {
     return this.http.get<Paciente[]>(`${this.base}/meus`);
   }

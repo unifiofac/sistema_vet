@@ -43,9 +43,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain filtros(HttpSecurity http, @Qualifier("corsConfigurationSource") CorsConfigurationSource cors) throws Exception {
+    SecurityFilterChain filtros(HttpSecurity http,
+                                @Qualifier("corsConfigurationSource") CorsConfigurationSource cors) throws Exception {
         http
-                // API stateless com token no cabeçalho Authorization: não usa cookie, então CSRF não se aplica
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(c -> c.configurationSource(cors))
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -53,15 +53,18 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/health", "/api/auth/login").permitAll()
                         .requestMatchers("/api/ia/**").hasRole("VETERINARIO")
-                        .requestMatchers("/api/usuarios/**").hasRole("VETERINARIO")
                         .requestMatchers("/api/pacientes/meus").hasRole("CLIENTE")
-                        .requestMatchers("/api/pacientes/**").hasRole("VETERINARIO")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("VETERINARIO")
+                        .requestMatchers(HttpMethod.GET, "/api/veterinarios/**", "/api/recepcionistas/**")
+                                .hasAnyRole("VETERINARIO", "RECEPCIONISTA")
+                        .requestMatchers("/api/veterinarios/**", "/api/recepcionistas/**").hasRole("VETERINARIO")
+                        .requestMatchers("/api/clientes/**", "/api/pacientes/**", "/api/agendamentos/**", "/api/dashboard/**")
+                                .hasAnyRole("VETERINARIO", "RECEPCIONISTA")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(o -> o.jwt(j -> j.jwtAuthenticationConverter(conversor())));
         return http.build();
     }
 
-    // claim "tipo" (CLIENTE | VETERINARIO) vira a autoridade ROLE_CLIENTE / ROLE_VETERINARIO
     private JwtAuthenticationConverter conversor() {
         JwtGrantedAuthoritiesConverter autoridades = new JwtGrantedAuthoritiesConverter();
         autoridades.setAuthoritiesClaimName("tipo");

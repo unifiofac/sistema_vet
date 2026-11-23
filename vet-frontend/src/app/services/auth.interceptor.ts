@@ -4,7 +4,6 @@ import { catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth';
 
-// Anexa o token às chamadas da API e encerra a sessão se o servidor responder 401 (token vencido/inválido)
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const daApi = req.url.startsWith(`${environment.apiUrl}/api/`);

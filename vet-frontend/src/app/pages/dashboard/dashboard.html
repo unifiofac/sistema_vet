@@ -1,0 +1,73 @@
+<h1 class="titulo">Dashboard</h1>
+
+@if (carregando()) {
+  <div class="centro"><mat-spinner diameter="40"></mat-spinner></div>
+} @else if (estado().erro) {
+  <p class="erro">Não foi possível carregar os indicadores.</p>
+} @else if (estado().resumo; as r) {
+  <div class="kpis">
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <mat-icon>pets</mat-icon>
+        <span class="numero">{{ r.totalPacientes }}</span>
+        <span class="rotulo">Pacientes cadastrados</span>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <mat-icon>event</mat-icon>
+        <span class="numero">{{ r.agendamentosHoje }}</span>
+        <span class="rotulo">Atendimentos hoje</span>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <mat-icon>pending_actions</mat-icon>
+        <span class="numero">{{ r.agendamentosPendentes }}</span>
+        <span class="rotulo">Agendamentos pendentes</span>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <mat-icon>people</mat-icon>
+        <span class="numero">{{ r.totalClientes }}</span>
+        <span class="rotulo">Clientes</span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="blocos">
+    <mat-card appearance="outlined">
+      <mat-card-header><mat-card-title>Pacientes por espécie</mat-card-title></mat-card-header>
+      <mat-card-content>
+        @for (e of especies(); track e.nome) {
+          <div class="barra-linha">
+            <span class="barra-nome">{{ e.nome }}</span>
+            <div class="barra"><div class="barra-preenchida" [style.width.%]="e.percentual"></div></div>
+            <span class="barra-qtd">{{ e.qtd }}</span>
+          </div>
+        } @empty {
+          <p class="vazio">Nenhum paciente cadastrado.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header><mat-card-title>Próximos agendamentos</mat-card-title></mat-card-header>
+      <mat-card-content>
+        @for (a of r.proximosAgendamentos; track a.id) {
+          <div class="proximo">
+            <strong>{{ a.dataHora | date: 'dd/MM HH:mm' }}</strong>
+            <span>{{ a.nomePaciente }} — {{ a.motivo }}</span>
+            <small>{{ a.nomeVeterinario }}</small>
+          </div>
+        } @empty {
+          <p class="vazio">Nenhum agendamento futuro.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+}

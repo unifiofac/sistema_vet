@@ -1,0 +1,47 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.topo {
+  flex: 0 0 auto;
+}
+
+.espaco {
+  flex: 1;
+}
+
+.usuario {
+  margin-right: 12px;
+  font-size: 0.9rem;
+}
+
+.corpo {
+  flex: 1;
+  background: #f5f7fa;
+}
+
+.menu {
+  width: 230px;
+}
+
+.conteudo {
+  padding: 24px;
+}
+
+.ativo {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+@media (max-width: 760px) {
+  .menu {
+    width: 64px;
+  }
+  .menu span[matListItemTitle] {
+    display: none;
+  }
+  .usuario {
+    display: none;
+  }
+}

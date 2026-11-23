@@ -16,10 +16,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/**
- * Limite simples de requisições por IP (janela de 1 minuto) para o login (força bruta)
- * e para a IA (custo da chave do Gemini). Fica em memória: vale para 1 instância do servidor.
- */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class LimiteRequisicoesFilter extends OncePerRequestFilter {

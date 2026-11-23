@@ -4,7 +4,6 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Paciente } from '../models/paciente.model';
 
-// Escapa texto vindo de usuário/banco/IA antes de entrar em HTML
 export function escapar(texto: string | undefined | null): string {
   return (texto ?? '')
     .replace(/&/g, '&amp;')
@@ -26,7 +25,6 @@ export class IaService {
   responder(pergunta: string, pet: Paciente, historico: MensagemHistorico[]): Observable<string> {
     const body = {
       pergunta,
-      // só o necessário para a IA: dados do dono não são enviados
       paciente: {
         nome: pet.nome,
         especie: pet.especie,
@@ -44,7 +42,6 @@ export class IaService {
       .pipe(map(r => r.resposta));
   }
 
-  // Mensagem inicial ao selecionar um paciente
   resumoPaciente(pet: Paciente): string {
     return `
       <p><strong>Paciente selecionado: ${escapar(pet.nome)}</strong></p>

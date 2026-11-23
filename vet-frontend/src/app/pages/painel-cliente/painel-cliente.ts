@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { AuthService } from '../../services/auth';
@@ -7,7 +6,7 @@ import { PacienteService } from '../../services/paciente';
 
 @Component({
   selector: 'app-painel-cliente',
-  imports: [DatePipe],
+  standalone: false,
   templateUrl: './painel-cliente.html',
   styleUrl: './painel-cliente.css',
 })

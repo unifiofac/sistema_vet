@@ -1,0 +1,1685 @@
+{
+  "info": {
+    "name": "Sistema Vet - API",
+    "_postman_id": "8b1f3c2e-5a77-4d1e-9a0c-2f4e6d8a9b10",
+    "description": "API do sistema de clínica veterinária (Spring Boot).\n\n1. Rode o backend: `./mvnw spring-boot:run` (porta 8080).\n2. Importe esta collection no Postman.\n3. Rode as pastas na ordem (ou use o Collection Runner). As requisições de cadastro salvam o id criado em variáveis da collection, usadas pelas seguintes.\n\nUsuários de teste (senha `senha123`): carlos@vetclinic.com (veterinário), maria@email.com e joao@email.com (clientes), ana@vetclinic.com (recepcionista).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "pacienteId",
+      "value": "1"
+    },
+    {
+      "key": "clienteId",
+      "value": "1"
+    },
+    {
+      "key": "veterinarioId",
+      "value": "1"
+    },
+    {
+      "key": "recepcionistaId",
+      "value": "1"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "agendamentoId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Autenticação",
+      "item": [
+        {
+          "name": "Login veterinário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Tipo veterinario\", () => pm.expect(pm.response.json().tipo).to.eql(\"veterinario\"));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"carlos@vetclinic.com\",\n  \"senha\": \"senha123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Login cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Tipo cliente\", () => pm.expect(pm.response.json().tipo).to.eql(\"cliente\"));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"maria@email.com\",\n  \"senha\": \"senha123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Login recepcionista",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Tipo recepcionista\", () => pm.expect(pm.response.json().tipo).to.eql(\"recepcionista\"));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana@vetclinic.com\",\n  \"senha\": \"senha123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Login com senha errada (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"maria@email.com\",\n  \"senha\": \"errada\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Clientes",
+      "item": [
+        {
+          "name": "Listar clientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Retorna lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar clientes por nome",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Retorna lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes?nome=maria",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes"
+              ],
+              "query": [
+                {
+                  "key": "nome",
+                  "value": "maria"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cadastrar cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Retorna id\", () => pm.expect(pm.response.json().id).to.be.a(\"number\"));",
+                  "pm.collectionVariables.set(\"clienteId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Pedro Almeida\",\n  \"email\": \"pedro{{$timestamp}}@email.com\",\n  \"telefone\": \"(11) 95555-0000\",\n  \"cpf\": \"111.222.333-44\",\n  \"endereco\": \"Rua A, 10\",\n  \"senha\": \"senha123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buscar cliente por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/{{clienteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "{{clienteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/{{clienteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "{{clienteId}}"
+              ]
+            },
+            "description": "A senha é opcional na edição: se não for enviada, continua a mesma.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Pedro Almeida Jr.\",\n  \"email\": \"pedro.jr{{$timestamp}}@email.com\",\n  \"telefone\": \"(11) 95555-1111\",\n  \"cpf\": \"111.222.333-44\",\n  \"endereco\": \"Rua B, 20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Pacientes do cliente 1 (Maria)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Retorna lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/1/pacientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "1",
+                "pacientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cadastrar com e-mail repetido (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Outra Maria\",\n  \"email\": \"maria@email.com\",\n  \"senha\": \"senha123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Cadastrar com dados inválidos (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"\",\n  \"email\": \"nao-e-email\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Excluir cliente com pets (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/{{clienteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "{{clienteId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Pacientes",
+      "item": [
+        {
+          "name": "Listar todos os pacientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Retorna lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar pacientes por dono",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Retorna lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes?donoId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes"
+              ],
+              "query": [
+                {
+                  "key": "donoId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar pacientes por nome",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Retorna lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes?nome=re",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes"
+              ],
+              "query": [
+                {
+                  "key": "nome",
+                  "value": "re"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cadastrar paciente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Retorna id\", () => pm.expect(pm.response.json().id).to.be.a(\"number\"));",
+                  "pm.collectionVariables.set(\"pacienteId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Bidu\",\n  \"especie\": \"Cachorro\",\n  \"raca\": \"Vira-lata\",\n  \"idade\": 2,\n  \"peso\": 12.3,\n  \"donoId\": 1,\n  \"historicoMedico\": \"Vacinas V10 e antirrábica em dia.\",\n  \"alergias\": \"Nenhuma\",\n  \"medicamentosAtuais\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buscar paciente por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes/{{pacienteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes",
+                "{{pacienteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar paciente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes/{{pacienteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes",
+                "{{pacienteId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Bidu\",\n  \"especie\": \"Cachorro\",\n  \"raca\": \"Vira-lata\",\n  \"idade\": 3,\n  \"peso\": 13.1,\n  \"donoId\": 1,\n  \"historicoMedico\": \"Vacinas V10 e antirrábica em dia.\",\n  \"alergias\": \"Dipirona\",\n  \"medicamentosAtuais\": \"Vermífugo a cada 3 meses\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Cadastrar com dono inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Bidu\",\n  \"especie\": \"Cachorro\",\n  \"raca\": \"Vira-lata\",\n  \"idade\": 2,\n  \"peso\": 12.3,\n  \"donoId\": 9999,\n  \"historicoMedico\": \"Vacinas V10 e antirrábica em dia.\",\n  \"alergias\": \"Nenhuma\",\n  \"medicamentosAtuais\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Cadastrar sem campos obrigatórios (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"\",\n  \"especie\": \"Gato\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buscar paciente inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes/9999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes",
+                "9999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir paciente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes/{{pacienteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes",
+                "{{pacienteId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Veterinários",
+      "item": [
+        {
+          "name": "Listar veterinários",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Retorna lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/veterinarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "veterinarios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cadastrar veterinário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Retorna id\", () => pm.expect(pm.response.json().id).to.be.a(\"number\"));",
+                  "pm.collectionVariables.set(\"veterinarioId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/veterinarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "veterinarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dra. Paula Lima\",\n  \"email\": \"paula{{$timestamp}}@vetclinic.com\",\n  \"telefone\": \"(11) 94444-2222\",\n  \"crmv\": \"CRMV-SP 7{{$randomInt}}\",\n  \"especialidade\": \"Dermatologia\",\n  \"senha\": \"senha123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buscar veterinário por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/veterinarios/{{veterinarioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "veterinarios",
+                "{{veterinarioId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar veterinário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/veterinarios/{{veterinarioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "veterinarios",
+                "{{veterinarioId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dra. Paula Lima\",\n  \"email\": \"paula.lima{{$timestamp}}@vetclinic.com\",\n  \"telefone\": \"(11) 94444-3333\",\n  \"crmv\": \"CRMV-SP 8{{$randomInt}}\",\n  \"especialidade\": \"Dermatologia e Felinos\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Excluir veterinário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/veterinarios/{{veterinarioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "veterinarios",
+                "{{veterinarioId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Recepcionistas",
+      "item": [
+        {
+          "name": "Listar recepcionistas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Retorna lista\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/recepcionistas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "recepcionistas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cadastrar recepcionista",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Retorna id\", () => pm.expect(pm.response.json().id).to.be.a(\"number\"));",
+                  "pm.collectionVariables.set(\"recepcionistaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/recepcionistas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "recepcionistas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Bruno Rocha\",\n  \"email\": \"bruno{{$timestamp}}@vetclinic.com\",\n  \"telefone\": \"(11) 93333-4444\",\n  \"turno\": \"Tarde\",\n  \"senha\": \"senha123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buscar recepcionista por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/recepcionistas/{{recepcionistaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "recepcionistas",
+                "{{recepcionistaId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar recepcionista",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/recepcionistas/{{recepcionistaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "recepcionistas",
+                "{{recepcionistaId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Bruno Rocha\",\n  \"email\": \"bruno.rocha{{$timestamp}}@vetclinic.com\",\n  \"telefone\": \"(11) 93333-5555\",\n  \"turno\": \"Noite\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Excluir recepcionista",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/recepcionistas/{{recepcionistaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "recepcionistas",
+                "{{recepcionistaId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. IA (Gemini)",
+      "item": [
+        {
+          "name": "Perguntar à IA sobre um paciente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Tem resposta\", () => pm.expect(pm.response.json().resposta).to.be.a(\"string\").and.not.empty);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/ia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ia"
+              ]
+            },
+            "description": "Precisa da variável de ambiente GEMINI_API_KEY no backend. Sem ela, retorna 502.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pergunta\": \"O Rex está mancando da pata traseira há 2 dias. Quais hipóteses e exames você sugere?\",\n  \"paciente\": {\n    \"nome\": \"Rex\",\n    \"especie\": \"Cachorro\",\n    \"raca\": \"Labrador\",\n    \"idade\": 5,\n    \"peso\": 30.5,\n    \"historicoMedico\": \"Vacinação em dia. Castrado em 2021.\",\n    \"alergias\": \"Nenhuma alergia conhecida\",\n    \"medicamentosAtuais\": \"\"\n  },\n  \"historico\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Pergunta de continuação (com histórico)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/ia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ia"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pergunta\": \"E qual analgésico seria seguro para ele?\",\n  \"paciente\": {\n    \"nome\": \"Rex\",\n    \"especie\": \"Cachorro\",\n    \"raca\": \"Labrador\",\n    \"idade\": 5,\n    \"peso\": 30.5\n  },\n  \"historico\": [\n    {\n      \"papel\": \"user\",\n      \"texto\": \"O Rex está mancando da pata traseira há 2 dias.\"\n    },\n    {\n      \"papel\": \"model\",\n      \"texto\": \"Hipóteses: entorse, ruptura de ligamento cruzado...\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Pergunta sem paciente (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/ia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ia"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pergunta\": \"Oi\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Agendamentos",
+      "item": [
+        {
+          "name": "Listar agendamentos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/agendamentos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "agendamentos"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Criar agendamento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/agendamentos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "agendamentos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataHora\": \"2030-01-15T10:00\",\n  \"motivo\": \"Consulta de rotina\",\n  \"status\": \"AGENDADO\",\n  \"pacienteId\": 1,\n  \"veterinarioId\": 1\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Criar no mesmo horário (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/agendamentos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "agendamentos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataHora\": \"2030-01-15T10:00\",\n  \"motivo\": \"Consulta de rotina\",\n  \"status\": \"AGENDADO\",\n  \"pacienteId\": 1,\n  \"veterinarioId\": 1\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/agendamentos/{{agendamentoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "agendamentos",
+                "{{agendamentoId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar (concluir)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/agendamentos/{{agendamentoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "agendamentos",
+                "{{agendamentoId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataHora\": \"2030-01-16T11:00\",\n  \"motivo\": \"Consulta de rotina\",\n  \"status\": \"CONCLUIDO\",\n  \"pacienteId\": 1,\n  \"veterinarioId\": 1\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dados inválidos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/agendamentos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "agendamentos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"motivo\": \"\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Excluir agendamento",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/agendamentos/{{agendamentoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "agendamentos",
+                "{{agendamentoId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "8. Dashboard",
+      "item": [
+        {
+          "name": "Indicadores (KPIs)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  }
+}

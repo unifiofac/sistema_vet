@@ -27,7 +27,6 @@ export class AuthService {
   readonly token = computed(() => this._sessao()?.token ?? null);
   readonly logado = computed(() => this._sessao() !== null);
 
-  // A senha só trafega para o servidor; quem confere e emite o token é o backend.
   login(email: string, senha: string): Observable<Usuario> {
     return this.http
       .post<RespostaLogin>(`${environment.apiUrl}/api/auth/login`, { email, senha })
@@ -58,7 +57,6 @@ export class AuthService {
     }
   }
 
-  // só evita mostrar telas com token vencido; a validação de verdade é sempre feita pelo servidor
   private expirado(token: string): boolean {
     try {
       const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');

@@ -1,0 +1,32 @@
+<mat-toolbar color="primary" class="topo">
+  <span>🐾 Sistema Veterinário</span>
+  <span class="espaco"></span>
+  <span class="usuario">{{ auth.usuario()?.nome }} ({{ auth.usuario()?.tipo }})</span>
+  <button mat-button (click)="auth.logout()">
+    <mat-icon>logout</mat-icon>
+    Sair
+  </button>
+</mat-toolbar>
+
+<mat-sidenav-container class="corpo">
+  <mat-sidenav mode="side" opened class="menu">
+    <mat-nav-list>
+      @for (item of itens; track item.rota) {
+        <a mat-list-item [routerLink]="item.rota" routerLinkActive="ativo">
+          <mat-icon matListItemIcon>{{ item.icone }}</mat-icon>
+          <span matListItemTitle>{{ item.rotulo }}</span>
+        </a>
+      }
+      @if (auth.usuario()?.tipo === 'veterinario') {
+        <a mat-list-item routerLink="ia" routerLinkActive="ativo">
+          <mat-icon matListItemIcon>smart_toy</mat-icon>
+          <span matListItemTitle>Assistente IA</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="conteudo">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

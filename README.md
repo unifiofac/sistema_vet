@@ -1,7 +1,8 @@
 # Sistema Veterinário
 
-- `vet-backend/` — API em Spring Boot (login com JWT, pacientes, clientes e chat com IA via Gemini)
-- `vet-frontend/` — Angular
+- `vet-backend/` — API em Spring Boot (login com JWT, CRUD de clientes, pacientes, veterinários, recepcionistas e agendamentos, dashboard e chat com IA via Gemini)
+- `vet-frontend/` — Angular 22 com NgModules (`standalone: false`), roteamento, SSR desligado e Angular Material
+- `vet-backend/postman/` — coleção Postman (o login guarda o token sozinho)
 
 ## Rodar localmente
 
@@ -38,7 +39,7 @@ npm start          # http://localhost:4200 — o proxy.conf.json encaminha /api 
 | `JWT_SECRET` | sim | assina os tokens de login; mínimo 32 caracteres aleatórios |
 | `CORS_ORIGINS` | em produção | URL(s) do frontend, separadas por vírgula (ex.: `https://meu-vet.netlify.app`) |
 | `JDBC_DATABASE_URL`, `DB_USER`, `DB_PASSWORD` | em produção | PostgreSQL. Sem isso usa H2 em arquivo (`data/vetdb`), que **some** em hospedagem sem disco persistente |
-| `ADMIN_EMAIL`, `ADMIN_SENHA`, `ADMIN_NOME` | no 1º acesso | cria o primeiro veterinário quando o banco está vazio |
+| `ADMIN_EMAIL`, `ADMIN_SENHA`, `ADMIN_NOME`, `ADMIN_CRMV` | no 1º acesso | cria o primeiro veterinário quando o banco está vazio |
 | `PORT` | automática | a hospedagem define; o padrão é 8080 |
 | `LIMITE_LOGIN`, `LIMITE_IA` | não | requisições por minuto por IP (padrão 10 e 20) |
 
@@ -57,6 +58,80 @@ npm start          # http://localhost:4200 — o proxy.conf.json encaminha /api 
 ## Como o acesso funciona
 
 - Login em `POST /api/auth/login` devolve um token (12 h). O frontend envia `Authorization: Bearer ...`.
-- Veterinário: lista e cadastra pacientes, lista e cria clientes, usa o chat de IA.
-- Cliente: vê somente os próprios pets. O servidor decide pelo token, não por um id enviado.
+- **Veterinário:** tudo, inclusive excluir registros, cadastrar veterinários/recepcionistas e usar o chat de IA.
+- **Recepcionista:** cadastra e edita clientes, pacientes e agendamentos; consulta veterinários e recepcionistas. Não exclui nem usa a IA.
+- **Cliente:** vê somente os próprios pets. O servidor decide pelo token, não por um id enviado.
 - Login e IA têm limite de requisições por IP.
+
+## Telas (frontend)
+
+Após o login, veterinário e recepcionista entram em `/app`: **Dashboard** (4 indicadores, pacientes por espécie e próximos agendamentos),
+**Agendamentos**, **Pacientes**, **Clientes**, **Veterinários**, **Recepcionistas** (cada um com cadastro, edição e exclusão)
+e **Assistente IA** (só veterinário). Cliente entra em `/cliente`.
+
+Fluxo principal para testar: cadastrar cliente → cadastrar paciente (escolhendo o dono) → criar agendamento (paciente + veterinário + data/hora)
+→ ver o resultado em Agendamentos e no Dashboard. Dois agendamentos no mesmo horário para o mesmo veterinário são recusados.
+
+## Instruções de acesso para teste (professor)
+
+Informe aqui, na entrega, o endereço publicado e um usuário de teste:
+
+- Endereço: `https://SEU-SITE.netlify.app`
+- E-mail: `________` Senha: `________` (veterinário)
+
+A primeira abertura pode levar cerca de 1 minuto se a hospedagem gratuita estiver "dormindo".
+
+## Diagrama de classes
+
+```mermaid
+classDiagram
+    class Cliente {
+        Long id
+        String nome
+        String email
+        String telefone
+        String cpf
+        String endereco
+        String senha
+    }
+    class Paciente {
+        Long id
+        String nome
+        String especie
+        String raca
+        Integer idade
+        Double peso
+        String historicoMedico
+        String alergias
+        String medicamentosAtuais
+        LocalDate dataCadastro
+    }
+    class Veterinario {
+        Long id
+        String nome
+        String email
+        String telefone
+        String crmv
+        String especialidade
+        String senha
+    }
+    class Recepcionista {
+        Long id
+        String nome
+        String email
+        String telefone
+        String turno
+        String senha
+    }
+    class Agendamento {
+        Long id
+        LocalDateTime dataHora
+        String motivo
+        String status
+    }
+    Cliente "1" --> "0..*" Paciente : dono de
+    Paciente "1" --> "0..*" Agendamento : tem
+    Veterinario "1" --> "0..*" Agendamento : atende
+```
+
+A senha é sempre guardada como hash BCrypt. Recepcionista não se relaciona com as outras entidades: ela opera o sistema (cadastros e agendamentos).

@@ -9,6 +9,6 @@ export class UsuarioService {
   private http = inject(HttpClient);
 
   listarClientes(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(`${environment.apiUrl}/api/usuarios/clientes`);
+    return this.http.get<Usuario[]>(`${environment.apiUrl}/api/clientes`);
   }
 }

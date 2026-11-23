@@ -1,0 +1,50 @@
+<div class="cabecalho">
+  <h1>{{ entidade().titulo }}</h1>
+  @if (podeEscrever()) {
+    <button mat-flat-button (click)="abrir()">
+      <mat-icon>add</mat-icon>
+      Novo(a) {{ entidade().singular }}
+    </button>
+  }
+</div>
+
+@if (carregando()) {
+  <div class="centro"><mat-spinner diameter="40"></mat-spinner></div>
+} @else if (erro()) {
+  <p class="erro">{{ erro() }}</p>
+} @else {
+  <div class="tabela-wrap mat-elevation-z1">
+    <table mat-table [dataSource]="registros()">
+      @for (coluna of entidade().colunas; track coluna.chave) {
+        <ng-container [matColumnDef]="coluna.chave">
+          <th mat-header-cell *matHeaderCellDef>{{ coluna.titulo }}</th>
+          <td mat-cell *matCellDef="let r">
+            @if (coluna.formato === 'status') {
+              <span class="status" [attr.data-status]="r[coluna.chave]">{{ valor(r, coluna) }}</span>
+            } @else {
+              {{ valor(r, coluna) }}
+            }
+          </td>
+        </ng-container>
+      }
+
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef class="acoes">Ações</th>
+        <td mat-cell *matCellDef="let r" class="acoes">
+          @if (podeEscrever()) {
+            <button mat-icon-button aria-label="Editar" (click)="abrir(r)"><mat-icon>edit</mat-icon></button>
+          }
+          @if (ehVeterinario()) {
+            <button mat-icon-button aria-label="Excluir" (click)="excluir(r)"><mat-icon>delete</mat-icon></button>
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="colunas()"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas()"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="vazio" [attr.colspan]="colunas().length">Nenhum registro cadastrado.</td>
+      </tr>
+    </table>
+  </div>
+}

@@ -1,0 +1,22 @@
+.grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 16px;
+  min-width: min(560px, 80vw);
+  padding-top: 8px;
+}
+
+.inteira {
+  grid-column: 1 / -1;
+}
+
+.erro {
+  color: #b3261e;
+  margin-top: 4px;
+}
+
+@media (max-width: 640px) {
+  .grade {
+    grid-template-columns: 1fr;
+  }
+}

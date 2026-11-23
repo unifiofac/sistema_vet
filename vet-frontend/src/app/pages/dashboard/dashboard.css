@@ -1,0 +1,86 @@
+.titulo {
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.kpis mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 16px;
+}
+
+.numero {
+  font-size: 2.2rem;
+  font-weight: 500;
+}
+
+.rotulo {
+  color: #555;
+}
+
+.blocos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.barra-linha {
+  display: grid;
+  grid-template-columns: 90px 1fr 32px;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.barra {
+  height: 12px;
+  background: #e8eaf0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.barra-preenchida {
+  height: 100%;
+  background: #3f6fd8;
+}
+
+.barra-qtd {
+  text-align: right;
+}
+
+.proximo {
+  display: grid;
+  gap: 2px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.proximo small,
+.vazio {
+  color: #666;
+}
+
+.centro {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.erro {
+  color: #b3261e;
+}
+
+@media (max-width: 800px) {
+  .blocos {
+    grid-template-columns: 1fr;
+  }
+}

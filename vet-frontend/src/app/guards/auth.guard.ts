@@ -8,7 +8,7 @@ export const veterinarioGuard: CanActivateFn = () => {
   const usuario = auth.usuario();
 
   if (!usuario) return router.createUrlTree(['/login']);
-  return usuario.tipo === 'veterinario' ? true : router.createUrlTree(['/cliente']);
+  return usuario.tipo !== 'cliente' ? true : router.createUrlTree(['/cliente']);
 };
 
 export const clienteGuard: CanActivateFn = () => {
@@ -17,5 +17,5 @@ export const clienteGuard: CanActivateFn = () => {
   const usuario = auth.usuario();
 
   if (!usuario) return router.createUrlTree(['/login']);
-  return usuario.tipo === 'cliente' ? true : router.createUrlTree(['/veterinario']);
+  return usuario.tipo === 'cliente' ? true : router.createUrlTree(['/app']);
 };

@@ -1,8 +1,6 @@
 import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
-import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { Paciente } from '../../models/paciente.model';
 import { AuthService } from '../../services/auth';
 import { escapar, IaService, MensagemHistorico } from '../../services/ia';
@@ -18,7 +16,7 @@ interface Mensagem {
 
 @Component({
   selector: 'app-painel-veterinario',
-  imports: [FormsModule, RouterLink],
+  standalone: false,
   templateUrl: './painel-veterinario.html',
   styleUrl: './painel-veterinario.css',
 })

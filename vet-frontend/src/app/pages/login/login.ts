@@ -1,12 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  standalone: false,
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -36,7 +36,7 @@ export class Login {
     this.auth.login(email.trim(), senha).subscribe({
       next: usuario => {
         this.carregando.set(false);
-        this.router.navigate([usuario.tipo === 'veterinario' ? '/veterinario' : '/cliente']);
+        this.router.navigate([usuario.tipo === 'cliente' ? '/cliente' : '/app']);
       },
       error: (e: HttpErrorResponse) => {
         this.carregando.set(false);
