@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { Paciente } from '../models/paciente.model';
 
 // Escapa texto vindo de usuário/banco/IA antes de entrar em HTML
@@ -38,7 +39,9 @@ export class IaService {
       },
       historico,
     };
-    return this.http.post<{ resposta: string }>('/api/ia', body).pipe(map(r => r.resposta));
+    return this.http
+      .post<{ resposta: string }>(`${environment.apiUrl}/api/ia`, body)
+      .pipe(map(r => r.resposta));
   }
 
   // Mensagem inicial ao selecionar um paciente

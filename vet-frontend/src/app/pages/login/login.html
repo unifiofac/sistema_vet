@@ -27,18 +27,12 @@
                 }
             </div>
 
-            @if (erro) {
-                <p class="erro-login">{{ erro }}</p>
+            @if (erro()) {
+                <p class="erro-login">{{ erro() }}</p>
             }
 
-            <button type="submit" class="btn-login">Entrar</button>
+            <button type="submit" class="btn-login" [disabled]="carregando()">{{ carregando() ? 'Entrando...' : 'Entrar' }}</button>
         </form>
 
-        <div class="info-box">
-            <p><strong>Credenciais de teste:</strong></p>
-            <p>Veterinário: carlos@vetclinic.com</p>
-            <p>Cliente: maria@email.com</p>
-            <p>Senha: senha123</p>
-        </div>
     </div>
 </div>

@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Banco local (H2 em arquivo) ###
+data/
+
+### Segredos ###
+.env
+.env.*

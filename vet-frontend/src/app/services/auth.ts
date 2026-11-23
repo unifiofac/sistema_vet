@@ -1,52 +1,71 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable, map, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { Usuario } from '../models/usuario.model';
 
-interface UsuarioMock extends Usuario {
-  senha: string;
+interface RespostaLogin {
+  token: string;
+  usuario: Usuario;
 }
 
-// Temporário: dados do seu vet_database.sql. Quando o Spring Boot existir,
-// isso vira uma chamada HTTP e a senha nunca mais fica no frontend.
-const USUARIOS_MOCK: UsuarioMock[] = [
-  { id: 1, nome: 'Dr. Carlos Silva', email: 'carlos@vetclinic.com', telefone: '(11) 98765-4321', tipo: 'veterinario', senha: 'senha123' },
-  { id: 2, nome: 'Maria Santos', email: 'maria@email.com', telefone: '(11) 91234-5678', tipo: 'cliente', senha: 'senha123' },
-  { id: 3, nome: 'João Oliveira', email: 'joao@email.com', telefone: '(11) 99876-5432', tipo: 'cliente', senha: 'senha123' },
-];
+interface Sessao {
+  token: string;
+  usuario: Usuario;
+}
 
-const CHAVE = 'vet_usuario';
+const CHAVE = 'vet_sessao';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private http = inject(HttpClient);
   private router = inject(Router);
 
-  // equivale ao $_SESSION do PHP
-  private _usuario = signal<Usuario | null>(this.carregar());
-  readonly usuario = this._usuario.asReadonly();
-  readonly logado = computed(() => this._usuario() !== null);
+  private _sessao = signal<Sessao | null>(this.carregar());
+  readonly usuario = computed(() => this._sessao()?.usuario ?? null);
+  readonly token = computed(() => this._sessao()?.token ?? null);
+  readonly logado = computed(() => this._sessao() !== null);
 
-  login(email: string, senha: string): Usuario | null {
-    const encontrado = USUARIOS_MOCK.find(u => u.email === email && u.senha === senha);
-    if (!encontrado) return null;
-
-    const { senha: _ignorada, ...usuario } = encontrado;
-    this._usuario.set(usuario);
-    try { sessionStorage.setItem(CHAVE, JSON.stringify(usuario)); } catch {}
-    return usuario;
+  // A senha só trafega para o servidor; quem confere e emite o token é o backend.
+  login(email: string, senha: string): Observable<Usuario> {
+    return this.http
+      .post<RespostaLogin>(`${environment.apiUrl}/api/auth/login`, { email, senha })
+      .pipe(
+        tap(r => {
+          const sessao = { token: r.token, usuario: r.usuario };
+          this._sessao.set(sessao);
+          try { sessionStorage.setItem(CHAVE, JSON.stringify(sessao)); } catch {}
+        }),
+        map(r => r.usuario),
+      );
   }
 
   logout(): void {
-    this._usuario.set(null);
+    this._sessao.set(null);
     try { sessionStorage.removeItem(CHAVE); } catch {}
     this.router.navigate(['/login']);
   }
 
-  private carregar(): Usuario | null {
+  private carregar(): Sessao | null {
     try {
       const salvo = sessionStorage.getItem(CHAVE);
-      return salvo ? JSON.parse(salvo) : null;
+      if (!salvo) return null;
+      const sessao = JSON.parse(salvo) as Sessao;
+      return this.expirado(sessao.token) ? null : sessao;
     } catch {
       return null;
+    }
+  }
+
+  // só evita mostrar telas com token vencido; a validação de verdade é sempre feita pelo servidor
+  private expirado(token: string): boolean {
+    try {
+      const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const { exp } = JSON.parse(atob(payload));
+      return typeof exp !== 'number' || exp * 1000 <= Date.now();
+    } catch {
+      return true;
     }
   }
 }

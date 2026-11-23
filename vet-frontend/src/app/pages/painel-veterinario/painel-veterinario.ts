@@ -1,5 +1,6 @@
 import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { catchError, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Paciente } from '../../models/paciente.model';
@@ -26,7 +27,10 @@ export class PainelVeterinario {
   private pacienteService = inject(PacienteService);
   private ia = inject(IaService);
 
-  pacientes = toSignal(this.pacienteService.listarTodos(), { initialValue: [] });
+  pacientes = toSignal(
+    this.pacienteService.listarTodos().pipe(catchError(() => of([]))),
+    { initialValue: [] },
+  );
 
   selecionado = signal<Paciente | null>(null);
   mensagens = signal<Mensagem[]>([]);

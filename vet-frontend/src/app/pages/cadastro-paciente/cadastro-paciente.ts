@@ -1,7 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { catchError, of } from 'rxjs';
 import { AuthService } from '../../services/auth';
 import { PacienteService } from '../../services/paciente';
 import { UsuarioService } from '../../services/usuario';
@@ -19,7 +21,12 @@ export class CadastroPaciente {
   private usuarioService = inject(UsuarioService);
   auth = inject(AuthService);
 
-  clientes = toSignal(this.usuarioService.listarClientes(), { initialValue: [] });
+  clientes = toSignal(
+    this.usuarioService.listarClientes().pipe(catchError(() => of([]))),
+    { initialValue: [] },
+  );
+  erro = signal('');
+  salvando = signal(false);
   especies = ['Cachorro', 'Gato', 'Pássaro', 'Coelho', 'Outro'];
 
   form = this.fb.nonNullable.group({
@@ -45,6 +52,9 @@ export class CadastroPaciente {
     }
     if (!confirm('Confirma o cadastro deste paciente?')) return;
 
+    this.erro.set('');
+    this.salvando.set(true);
+
     const v = this.form.getRawValue();
     this.pacienteService
       .cadastrar({
@@ -58,6 +68,15 @@ export class CadastroPaciente {
         alergias: v.alergias.trim() || undefined,
         medicamentosAtuais: v.medicamentosAtuais.trim() || undefined,
       })
-      .subscribe(() => this.router.navigate(['/veterinario']));
+      .subscribe({
+        next: () => this.router.navigate(['/veterinario']),
+        error: (e: HttpErrorResponse) => {
+          this.salvando.set(false);
+          this.erro.set(
+            e.status === 400 ? 'Dados inválidos. Confira os campos e o dono selecionado.'
+            : 'Não foi possível salvar o paciente. Tente novamente.',
+          );
+        },
+      });
   }
 }

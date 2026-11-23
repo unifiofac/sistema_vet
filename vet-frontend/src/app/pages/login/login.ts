@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
@@ -14,7 +15,8 @@ export class Login {
   private auth = inject(AuthService);
   private router = inject(Router);
 
-  erro = '';
+  erro = signal('');
+  carregando = signal(false);
 
   form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -22,20 +24,28 @@ export class Login {
   });
 
   entrar() {
-    this.erro = '';
+    this.erro.set('');
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
     const { email, senha } = this.form.getRawValue();
-    const usuario = this.auth.login(email, senha);
+    this.carregando.set(true);
 
-    if (!usuario) {
-      this.erro = 'E-mail ou senha incorretos.';
-      return;
-    }
-
-    this.router.navigate([usuario.tipo === 'veterinario' ? '/veterinario' : '/cliente']);
+    this.auth.login(email.trim(), senha).subscribe({
+      next: usuario => {
+        this.carregando.set(false);
+        this.router.navigate([usuario.tipo === 'veterinario' ? '/veterinario' : '/cliente']);
+      },
+      error: (e: HttpErrorResponse) => {
+        this.carregando.set(false);
+        this.erro.set(
+          e.status === 401 ? 'E-mail ou senha incorretos.'
+          : e.status === 429 ? 'Muitas tentativas. Aguarde um minuto e tente de novo.'
+          : 'Não foi possível conectar ao servidor. Tente novamente em instantes.',
+        );
+      },
+    });
   }
 }

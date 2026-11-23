@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { catchError, of } from 'rxjs';
 import { AuthService } from '../../services/auth';
 import { PacienteService } from '../../services/paciente';
 
@@ -15,7 +16,7 @@ export class PainelCliente {
   auth = inject(AuthService);
 
   pacientes = toSignal(
-    this.pacienteService.listarPorDono(this.auth.usuario()!.id),
+    this.pacienteService.listarMeus().pipe(catchError(() => of([]))),
     { initialValue: [] },
   );
 

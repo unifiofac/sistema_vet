@@ -101,7 +101,10 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn-submit">Cadastrar Paciente</button>
+                @if (erro()) {
+                    <p class="erro-campo">{{ erro() }}</p>
+                }
+                <button type="submit" class="btn-submit" [disabled]="salvando()">{{ salvando() ? 'Salvando...' : 'Cadastrar Paciente' }}</button>
                 <a routerLink="/veterinario" class="btn-cancel">Cancelar</a>
             </div>
         </form>
